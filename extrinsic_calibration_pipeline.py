@@ -282,9 +282,9 @@ if __name__ == '__main__':
     # convolution kernel "conv_size" is needed to find the checkerboard
     # usual values are 9, 11, 15: use 9 or lower when using small checkerboards
     # use 11 or higher if using big checkerboards (a few centimeters per square)
-    calibration_settings = {'checkerboard_rows': 7, 
+    calibration_settings = {'checkerboard_rows': 6, 
                             'checkerboard_columns': 10, 
-                            'checkerboard_box_size': 0.0115,
+                            'checkerboard_box_size': 0.005,
                             'conv_size': (6,6)}
     
     # getting the full path to the test folder
