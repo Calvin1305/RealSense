@@ -284,8 +284,8 @@ if __name__ == '__main__':
     # use 11 or higher if using big checkerboards (a few centimeters per square)
     calibration_settings = {'checkerboard_rows': 7, 
                             'checkerboard_columns': 10, 
-                            'checkerboard_box_size': 0.005,
-                            'conv_size': (9,9)}
+                            'checkerboard_box_size': 0.0115,
+                            'conv_size': (6,6)}
     
     # getting the full path to the test folder
     # using the "current working directory" path which is the path 
