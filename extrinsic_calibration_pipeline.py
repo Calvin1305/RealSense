@@ -2,6 +2,45 @@ import cv2 as cv
 import glob
 import numpy as np
 import os
+import re
+
+
+def draw_small_chessboard_markers(frame, corners, color=(0, 255, 0), radius=2, thickness=1):
+    """Draw compact corner markers to keep visualization readable."""
+    pts = corners.reshape(-1, 2)
+    for idx, (x, y) in enumerate(pts):
+        center = (int(round(x)), int(round(y)))
+        if idx == 0:
+            # First corner in red to preserve orientation cue.
+            cv.circle(frame, center, radius + 1, (0, 0, 255), thickness, cv.LINE_AA)
+        else:
+            cv.circle(frame, center, radius, color, thickness, cv.LINE_AA)
+
+
+def extract_frame_index(filepath):
+    """Extract numeric frame index from names like ..._color_12.*"""
+    name = os.path.basename(filepath)
+    match = re.search(r'_color_(\d+)', name)
+    return int(match.group(1)) if match else None
+
+
+def pair_stereo_filenames(files_cam0, files_cam1):
+    """Pair stereo frames by frame index to avoid mismatched calibration samples."""
+    cam0_map = {}
+    cam1_map = {}
+
+    for p in files_cam0:
+        idx = extract_frame_index(p)
+        if idx is not None:
+            cam0_map[idx] = p
+
+    for p in files_cam1:
+        idx = extract_frame_index(p)
+        if idx is not None:
+            cam1_map[idx] = p
+
+    common_indices = sorted(set(cam0_map.keys()).intersection(cam1_map.keys()))
+    return [cam0_map[i] for i in common_indices], [cam1_map[i] for i in common_indices]
 
 def calibrate_camera_for_intrinsic_parameters(images_names, calibration_settings):
     ''' Calibrate single camera to obtain camera intrinsic parameters from saved frames.
@@ -58,8 +97,8 @@ def calibrate_camera_for_intrinsic_parameters(images_names, calibration_settings
 
             # opencv can attempt to improve the checkerboard coordinates
             corners = cv.cornerSubPix(gray, corners, conv_size, (-1, -1), criteria)
-            # draws the corners just found in the image
-            cv.drawChessboardCorners(frame, (rows,columns), corners, ret)
+            # draws compact markers to avoid oversized default symbols
+            draw_small_chessboard_markers(frame, corners)
             # draws the helper text
             cv.putText(frame, 'If detected points are poor, press "s" to skip this sample', (25, 25), cv.FONT_HERSHEY_COMPLEX, 0.5, (0,0,255), 2)
 
@@ -193,11 +232,11 @@ def stereo_calibrate(K0, D0, K1, D1, c0_images_names, c1_images_names, calibrati
             corners1 = cv.cornerSubPix(gray1, corners1, conv_size, (-1, -1), criteria)
             corners2 = cv.cornerSubPix(gray2, corners2, conv_size, (-1, -1), criteria)
             
-            # draws the points for each image
-            cv.drawChessboardCorners(frame0, (rows,columns), corners1, c_ret1)
+            # draws compact points for each image
+            draw_small_chessboard_markers(frame0, corners1)
             cv.imshow('img_slave_'+serials[0], frame0)
 
-            cv.drawChessboardCorners(frame1, (rows,columns), corners2, c_ret2)
+            draw_small_chessboard_markers(frame1, corners2)
             cv.imshow('img_master_'+serials[1], frame1)
             k = cv.waitKey(0)
             
@@ -212,6 +251,11 @@ def stereo_calibrate(K0, D0, K1, D1, c0_images_names, c1_images_names, calibrati
             imgpoints_right.append(corners2)
 
     cv.destroyAllWindows()
+
+    print('[INFO] Accepted stereo pairs: ' + str(len(objpoints)))
+    if len(objpoints) < 3:
+        raise RuntimeError('[ERROR] Too few valid stereo pairs. Need at least 3 accepted pairs.')
+
     # this flag means that we are gonna pass the intrinsic matrix to the 
     # algorithm for both camera instead of calculating it
     stereocalibration_flags = cv.CALIB_FIX_INTRINSIC
@@ -228,13 +272,15 @@ def stereo_calibrate(K0, D0, K1, D1, c0_images_names, c1_images_names, calibrati
     print('=== STEREO CAMERA RESULTS ===')
     print('=== camera ' + serials[0] + ' moved to camera ' + serials[1] + ' ===')
     print('RMSE: ', ret)
+    if ret > 2.0:
+        print('[WARNING] Stereo RMSE is high. Check checkerboard size settings, pair synchronization and corner quality.')
     print('Rotation matrix: ' + str(R))
     print('Translation matrix: ' + str(T))
     print('=============================') 
     print('Complete RT in homogeneous coordinates')
     print(str(R[0,0]) + '\t' + str(R[0,1]) + '\t' + str(R[0,2]) + '\t' + str(T[0][0]))
-    print(str(R[1,0]) + '\t' + str(R[1,1]) + '\t' + str(R[1,2]) + '\t' + str(T[0][1]))
-    print(str(R[2,0]) + '\t' + str(R[2,1]) + '\t' + str(R[2,2]) + '\t' + str(T[0][2]))
+    print(str(R[1,0]) + '\t' + str(R[1,1]) + '\t' + str(R[1,2]) + '\t' + str(T[1][0]))
+    print(str(R[2,0]) + '\t' + str(R[2,1]) + '\t' + str(R[2,2]) + '\t' + str(T[2][0]))
     print(str(0.0) + '\t' + str(0.0) + '\t' + str(0.0) + '\t' + str(1.0))
     print('=============================')    
     return R, T
@@ -283,9 +329,9 @@ if __name__ == '__main__':
     # usual values are 9, 11, 15: use 9 or lower when using small checkerboards
     # use 11 or higher if using big checkerboards (a few centimeters per square)
     calibration_settings = {'checkerboard_rows': 6, 
-                            'checkerboard_columns': 10, 
+                            'checkerboard_columns': 11, 
                             'checkerboard_box_size': 0.005,
-                            'conv_size': (6,6)}
+                            'conv_size': (3,3)}
     
     # getting the full path to the test folder
     # using the "current working directory" path which is the path 
@@ -306,7 +352,8 @@ if __name__ == '__main__':
     # now loads filenames separately from each device
     filenames = {}
     for s in serials:
-        filenames[s] = glob.glob(os.path.join(PATH,s+'*_color_*'))        
+        files = glob.glob(os.path.join(PATH, s + '*_color_*'))
+        filenames[s] = sorted(files, key=lambda p: extract_frame_index(p) if extract_frame_index(p) is not None else 10**9)
 
     # calibro intrinsecamente le due camere, ovvero stimo la matrice K per ognuna
     intrinsics = {}
@@ -319,9 +366,14 @@ if __name__ == '__main__':
         intrinsics[s] = [K, D]
 
     print('[INFO] Check the position of the red "O". If wrong, press s to skip the pair.')
+    stereo_files_0, stereo_files_1 = pair_stereo_filenames(filenames[serials[0]], filenames[serials[1]])
+    print('[INFO] Paired stereo frames: ' + str(len(stereo_files_0)))
+    if len(stereo_files_0) == 0:
+        raise RuntimeError('[ERROR] No paired stereo frames found by frame index (_color_<id>).')
+
     R, T = stereo_calibrate(intrinsics[serials[0]][0], intrinsics[serials[0]][1], 
                             intrinsics[serials[1]][0], intrinsics[serials[1]][1], 
-                            filenames[serials[0]], filenames[serials[1]], 
+                            stereo_files_0, stereo_files_1, 
                             calibration_settings)
     # saves result
     save_extrinsic_calibration_parameters(R, T, PATH)
