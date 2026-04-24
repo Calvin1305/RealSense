@@ -1,5 +1,9 @@
 \documentclass[aspectratio=169]{beamer}
 \usetheme[progressbar=frametitle]{metropolis}
+\metroset{block=fill}
+\usecolortheme{default}
+\setbeamercolor{background canvas}{bg=white}
+\setbeamercolor{normal text}{bg=white}
 
 \title{Gruppo I(strice) - RealSense}
 \subtitle{Ricostruzione 3D Maschera}
@@ -14,28 +18,92 @@
 
 \begin{frame}
     \frametitle{Obiettivo Generale}
-    \begin{itemize}
-        \item Obiettivo: ricostruire in 3D una maschera acquisita da due Intel RealSense D435i
-        \item Problema: ogni camera osserva solo una parte dell'oggetto e in un proprio sistema di riferimento
-        \item Sfida: allineare nuvole di punti rumorose, parziali e con outlier
-        \item Risultato atteso: modello 3D coerente con buon dettaglio geometrico e colore
-    \end{itemize}
+    \centering
+    Ricostruire un modello 3D di una maschera da due nuvole di punti acquisite con camere RealSense D435 e con un profilatore Wenglor.
+\end{frame}
+
+\section{Realsense}
+
+% Introduzione RealSense
+\begin{frame}
+    \frametitle{Camera RealSense D435: Caratteristiche Tecniche}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Obiettivo Tecnico}
-    \begin{itemize}
-        \item Stimare i parametri intrinseci $K, D$ di ciascuna camera
-        \item Stimare i parametri estrinseci tra le camere ($R, t$)
-        \item Trasformare la sorgente nel riferimento target con:
-    \end{itemize}
-    \[
-        \mathbf{p}_{117} = \mathbf{R}\,\mathbf{p}_{108} + \mathbf{t}
-    \]
-    \begin{itemize}
-        \item Rifinire l'allineamento con ICP (coarse + colored fine)
-    \end{itemize}
+    \frametitle{Pipeline Comune: Calibrazione, Acquisizione, Elaborazione}
 \end{frame}
+
+\section{Setup a L - Realsense}
+
+% Setup a L
+\begin{frame}
+    \frametitle{Setup a L: Panoramica}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Setup a L: Calibrazione Estrinseca}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Setup a L: Allineamento Nuvole (Prima ICP)}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Setup a L: Allineamento Nuvole (Dopo ICP)}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Setup a L: Risultato Ricostruzione 3D}
+\end{frame}
+
+\section{Setup a X - Realsense}
+
+% Setup a X
+\begin{frame}
+    \frametitle{Setup a X: Panoramica}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Setup a X: Calibrazione Estrinseca}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Setup a X: Problematiche e Traslazione Manuale}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Setup a X: Allineamento Nuvole (Prima ICP)}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Setup a X: Allineamento Nuvole (Dopo ICP)}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Confronto Setup a L vs Setup a X}
+\end{frame}
+
+
+\section{Profilatore Wenglor}
+
+% Profilatore Wenglor
+\begin{frame}
+    \frametitle{Profilatore Wenglor: Caratteristiche Tecniche}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Setup Sperimentale Wenglor}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Ricostruzione 3D con Wenglor}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Confronto RealSense vs Wenglor}
+\end{frame}
+
+\section{Misurando - BONUS}
 
 
 \end{document}
