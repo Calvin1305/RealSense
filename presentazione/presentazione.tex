@@ -1,7 +1,7 @@
 \documentclass[aspectratio=169]{beamer}
 \usetheme[progressbar=frametitle]{metropolis}
 
-\title{Gruppo I - RealSense}
+\title{Gruppo I(strice) - RealSense}
 \subtitle{Ricostruzione 3D Maschera}
 \author{Andrea Bellu, Calvin You, Andrii Myzyn}
 \date{\today}
@@ -13,23 +13,28 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Obiettivo}
+    \frametitle{Obiettivo Generale}
     \begin{itemize}
-        \item Ricostruzione 3D di una maschera
-        \item Utilizzo di Intel RealSense D435i
-        \item Software: Open3D, OpenCV
+        \item Obiettivo: ricostruire in 3D una maschera acquisita da due Intel RealSense D435i
+        \item Problema: ogni camera osserva solo una parte dell'oggetto e in un proprio sistema di riferimento
+        \item Sfida: allineare nuvole di punti rumorose, parziali e con outlier
+        \item Risultato atteso: modello 3D coerente con buon dettaglio geometrico e colore
     \end{itemize}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Pipeline di Ricostruzione}
-    \begin{enumerate}
-        \item Calibrazione ed estrazione delle matrici
-        \item Acquisizione dati
-        \item Preprocessing (filtraggio, rimozione outliers)
-        \item Registrazione (ICP)
-        \item Fusione e visualizzazione
-    \end{enumerate}
+    \frametitle{Obiettivo Tecnico}
+    \begin{itemize}
+        \item Stimare i parametri intrinseci $K, D$ di ciascuna camera
+        \item Stimare i parametri estrinseci tra le camere ($R, t$)
+        \item Trasformare la sorgente nel riferimento target con:
+    \end{itemize}
+    \[
+        \mathbf{p}_{117} = \mathbf{R}\,\mathbf{p}_{108} + \mathbf{t}
+    \]
+    \begin{itemize}
+        \item Rifinire l'allineamento con ICP (coarse + colored fine)
+    \end{itemize}
 \end{frame}
 
 
