@@ -285,7 +285,7 @@ if __name__ == '__main__':
     calibration_settings = {'checkerboard_rows': 7, 
                             'checkerboard_columns': 10, 
                             'checkerboard_box_size': 0.0115,
-                            'conv_size': (6,6)}
+                            'conv_size': (4,4)}
     
     # getting the full path to the test folder
     # using the "current working directory" path which is the path 

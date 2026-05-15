@@ -1,36 +1,144 @@
 \documentclass[aspectratio=169]{beamer}
+
 \usetheme[progressbar=frametitle]{metropolis}
 
+
+
 \title{Gruppo I - RealSense}
+
 \subtitle{Ricostruzione 3D Maschera}
+
 \author{Andrea Bellu, Calvin You, Andrii Myzyn}
+
 \date{\today}
+
+
 
 \begin{document}
 
+
+
 \begin{frame}
+
     \titlepage
+
 \end{frame}
 
+
+
 \begin{frame}
+
     \frametitle{Obiettivo}
+
     \begin{itemize}
+
         \item Ricostruzione 3D di una maschera
+
         \item Utilizzo di Intel RealSense D435i
+
         \item Software: Open3D, OpenCV
+
     \end{itemize}
+
 \end{frame}
 
 \begin{frame}
+    \frametitle{Il Misurando: Caratteristiche Geometriche}
+
+    \begin{itemize}
+        \item Morfologia complessa: L'oggetto presenta esclusivamente superfici curve non piane.
+        \item Occlusioni e zone d'ombra: I dettagli anatomici (come la sporgenza del naso e le cavità oculari) creano ombre. 
+        \item Interazione ottica (Materiale): (Specifica se è plastica opaca, lucida, ecc.). La finitura superficiale influisce direttamente su come la maschera riflette il pattern a infrarossi della RealSense, determinando la quantità di "rumore" nella nuvola di punti.
+    \end{itemize}
+
+    inserire foto
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Dati Operativi: Intel RealSense D435i}
+
+    \begin{itemize}
+        \item Principio di funzionamento:Utilizza due sensori a infrarossi (IR) accoppiati a un proiettore di pattern IR invisibile.
+        \item Tipologia di dato acquisito: Il sistema genera Nuvole di Punti 3D grezze (formato .ply) e mappe di profondità (Depth Maps) accoppiate al colore, con una risoluzione di acquisizione impostata a 640x480 pixel.
+        \item Range operativo e Distanza Minima: Il range di lettura ottimale è tra 0.3 m e 3 m. La telecamera ha un vincolo fisico (Min-Z) di circa 11 cm.
+        \item Campo di Vista (FOV): 86° orizzontale x 57° verticale. 
+    \end{itemize}
+    inserire foto 
+\end{frame}
+
+\begin{frame}
+    \frametitle{Setup Sperimentale}
+
+    spiegare il setup, impiego di profilati per impsotare l'altezza delel tue telecamere e mettere le foto di emtrambe le configurazioni.
+    
+    inserire foto 
+\end{frame}
+
+\begin{frame}
+    \frametitle{Risultati intermedi Setup1}
+
+    Per ogni configurazione delle RealSense, illustrare i vari step svolti evidenziando i risultati intermedi. In particolare, illustrare anche con immagini il passaggio da 3D point cloud a 2D maps per capire le coordinate e la successiva applicazione della matrice di calibrazione che risulta dalla procedura di calibrazione.
+    
+    inserire foto 
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Risultati intermedi Setup2}
+
+    Per ogni configurazione delle RealSense, illustrare i vari step svolti evidenziando i risultati intermedi. In particolare, illustrare anche con immagini il passaggio da 3D point cloud a 2D maps per capire le coordinate e la successiva applicazione della matrice di calibrazione che risulta dalla procedura di calibrazione. Quale delle due configurazioni è migliore e perché? Avete incontrato criticità? 
+    
+    inserire foto 
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Confronto Tra I 2 Setup}
+
+    
+\end{frame}
+
+\begin{frame}
+
     \frametitle{Pipeline di Ricostruzione}
+
     \begin{enumerate}
+
         \item Calibrazione ed estrazione delle matrici
+
         \item Acquisizione dati
+
         \item Preprocessing (filtraggio, rimozione outliers)
+
         \item Registrazione (ICP)
+
         \item Fusione e visualizzazione
+
     \end{enumerate}
 \end{frame}
+
+    \begin{frame}
+        Mostrare il risultato dell’ottimizzazione della ricostruzione usando ICP, soffermandovi su dettagli 
+visivi che evidenzino la differenza tra il prima e dopo (es: dettagli non perfettamente sovrapposti, 
+buchi, ecc) 
+    \end{frame}
+
+    \begin{frame}
+        Mostrare i risultati qualitativi della nuvola di punti ottenuta con il profilatore in almeno 3 
+configurazioni diverse (ovvero parti diverse del misurando e/o diversi step della slitta) 
+    \end{frame}
+
+    \begin{frame}
+        BONUS: scegliere un dettaglio del misurando che potete effettivamente misurare in entrambi i 
+modi (RealSense / Profilatore) e misuratelo (anche manualmente) nelle varie configurazioni, 
+mettendo a confronto il risultato rispetto alla misura reale ottenuta con un calibro.
+    \end{frame}
+
+
+
+
+
 
 
 \end{document}
