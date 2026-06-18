@@ -1,0 +1,4 @@
+labbro-punta naso: 1.4cm
+naricesx-punta naso: 2.7cm
+naricedx-punta naso: 2.7cm
+narice-narice: 2.9cm

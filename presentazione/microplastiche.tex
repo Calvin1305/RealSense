@@ -1,0 +1,93 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme[progressbar=frametitle]{metropolis}
+\metroset{block=fill}
+\usecolortheme{default}
+\setbeamercolor{background canvas}{bg=white}
+\setbeamercolor{normal text}{fg=black}
+
+\title{Gruppo I - Microplastiche}
+\subtitle{Analisi Spettrale per la Distinzione della Grana}
+\author{Andrea Bellu, Calvin You, Andrii Myzyn}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}{Introduzione}
+    Le microplastiche rappresentano una sfida ambientale crescente a causa della loro persistenza e varietà morfologica. 
+    \vfill
+    \begin{itemize}
+        \item \textbf{Problematica:} La caratterizzazione visiva tradizionale è spesso insufficiente per distinguere microplastiche con proprietà chimico-fisiche simili ma granulometria differente.
+        \item \textbf{Tecnologia:} L'imaging iperspettrale (\textit{Hyperspectral Imaging - HSI}) permette di acquisire un intero spettro per ogni pixel dell'immagine (ipercubo), combinando risoluzione spaziale e spettrale.
+        \item \textbf{Strumentazione:} Utilizzo della camera \textbf{NIREOS HERA}, basata sulla trasformata di Fourier, operante nel range 400-1000 nm.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Obiettivo del Progetto}
+    Il fulcro della ricerca è determinare se la firma spettrale sia influenzata dalla dimensione della grana delle microplastiche.
+    \vfill
+    \begin{block}{Goal Specifici}
+        \begin{enumerate}
+            \item \textbf{Differenziazione:} Distinguere campioni a \textit{grana grossa} e \textit{grana fina}.
+            \item \textbf{Ottimizzazione Sorgente:} Confrontare l'efficacia dell'illuminazione a \textbf{luce bianca} (riflettanza standard) rispetto alla \textbf{luce UV} (fluorescenza/riflettanza specifica).
+            \item \textbf{Validazione:} Analizzare la variabilità spettrale tramite calcolo dello spettro medio e deviazione standard.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Setup Sperimentale: Hardware}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Camera Iperspettrale HERA:}
+            \begin{itemize}
+                \item Tecnologia: Interferometro a ritaglio variabile (Fourier-Transform).
+                \item Risoluzione Spaziale: 1280x1024 pixel.
+                \item Range: VIS-NIR (400-1000 nm).
+            \end{itemize}
+            \vspace{0.5cm}
+            \textbf{Illuminazione:}
+            \begin{itemize}
+                \item Lampada LED Bianca (Reflectance mode).
+                \item Lampada LED UV (Excitation mode).
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=1\textwidth]{images/camera_hera.png} 
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Configurazione delle Misure}
+    Per garantire la confrontabilità dei dati, è prevista una fase cruciale di \textbf{normalizzazione} spettrale per eliminare l'influenza della sorgente e dello sfondo.
+    
+    \vfill
+    \begin{itemize}
+        \item \textbf{Misura di Riferimento (Background):} Acquisizione del piano bianco (Teflon) per definire la riflettanza unitaria ($100\%$).
+        \item \textbf{Parametri di Acquisizione:}
+            \begin{itemize}
+                \item \textit{Scan Mode M}: Step di 2.5 nm per un bilanciamento tra tempo e risoluzione.
+                \item \textit{Exposure}: Ottimizzata per evitare la saturazione (evidenziata in rosso dal software).
+            \end{itemize}
+    \end{itemize}
+
+    \begin{block}{Piano di Misura (4 Acquisizioni Target)}
+        \centering
+        \begin{tabular}{lcc}
+            \hline
+            \textbf{Campione} & \textbf{Lampada Bianca} & \textbf{Lampada UV} \\
+            \hline
+            Microplastica Grana Grossa & Misura 1 & Misura 2 \\
+            Microplastica Grana Fina & Misura 3 & Misura 4 \\
+            \hline
+        \end{tabular}
+    \end{block}
+\end{frame}
+
+\end{document}
